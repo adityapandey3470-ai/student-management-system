@@ -34,6 +34,15 @@ public class StudentMapper {
         return responseDto;
     }
 
+    public void updateStudentFromDto(StudentRequestDto studentRequestDto, Student student){
+        student.setFirstName(studentRequestDto.getFirstName());
+        student.setLastName(studentRequestDto.getLastName());
+        student.setEmail(studentRequestDto.getEmail());
+        student.setPhoneNumber(studentRequestDto.getPhoneNumber());
+        student.setCourse(studentRequestDto.getCourse());
+        student.setSemester(studentRequestDto.getSemester());
+
+    }
 
 
 }

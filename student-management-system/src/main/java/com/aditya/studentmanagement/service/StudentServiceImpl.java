@@ -61,14 +61,10 @@ public class StudentServiceImpl implements StudentService {
     public StudentResponseDto updateStudent(Long id, StudentRequestDto newStudentRequestDto) {
         Student student = studentRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new StudentNotFoundException("Student not found with id: " + id));
-        Student newStudent = studentMapper.toEntity(newStudentRequestDto);
 
-        student.setFirstName(newStudent.getFirstName());
-        student.setLastName(newStudent.getLastName());
-        student.setEmail(newStudent.getEmail());
-        student.setPhoneNumber(newStudent.getPhoneNumber());
-        student.setCourse(newStudent.getCourse());
-        student.setSemester(newStudent.getSemester());
+         studentMapper.updateStudentFromDto(newStudentRequestDto, student);
+
+
         Student updatedStudent = studentRepository.save(student);
         return studentMapper.toResponseDto(updatedStudent);
     }
