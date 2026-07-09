@@ -12,5 +12,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     Optional<Student> findByIdAndDeletedFalse(Long id);
     List<Student> findByDeletedFalse();
+    Student findTopByOrderByRollNoDesc();
 
 }

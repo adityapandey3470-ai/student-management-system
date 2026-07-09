@@ -1,47 +1,16 @@
-package com.aditya.studentmanagement.entity;
+package com.aditya.studentmanagement.dto;
 
-import jakarta.persistence.*;
+public class StudentResponseDto {
 
-@Entity
-@Table(name = "students")
-public class Student {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(unique = true, nullable = false)
     private Long rollNo;
-
-
-    @Column(nullable = false, length = 50)
     private String firstName;
-
-
-
-    @Column(nullable = false, length = 50)
     private String lastName;
-
-
-    @Column(unique = true,  nullable = false, length = 100)
     private String email;
-
-
-
-    @Column(nullable = false, length = 10)
     private String phoneNumber;
-
-
-    @Column(nullable = false, length = 50)
     private String course;
-
-
-
-    @Column(nullable = false)
     private Integer semester;
-
-    private boolean deleted = false;
-
 
     public Long getId() {
         return id;
@@ -86,16 +55,14 @@ public class Student {
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
-
     public String getCourse() {
         return course;
     }
-
-
 
     public void setCourse(String course) {
         this.course = course;
@@ -107,13 +74,5 @@ public class Student {
 
     public void setSemester(Integer semester) {
         this.semester = semester;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
     }
 }

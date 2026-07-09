@@ -1,63 +1,31 @@
-package com.aditya.studentmanagement.entity;
+package com.aditya.studentmanagement.dto;
 
-import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
-@Entity
-@Table(name = "students")
-public class Student {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(unique = true, nullable = false)
-    private Long rollNo;
+public class StudentRequestDto {
 
 
-    @Column(nullable = false, length = 50)
+    @NotBlank(message = "First name is required")
     private String firstName;
 
-
-
-    @Column(nullable = false, length = 50)
+    @NotBlank(message = "Last name is required")
     private String lastName;
 
-
-    @Column(unique = true,  nullable = false, length = 100)
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email is not valid")
     private String email;
 
-
-
-    @Column(nullable = false, length = 10)
+    @NotBlank(message = "Phone number is required")
+    @Pattern(regexp = "\\d{10}", message = "Phone number must be exactly 10 digits")
     private String phoneNumber;
 
-
-    @Column(nullable = false, length = 50)
+    @NotBlank(message = "Course is required")
     private String course;
 
-
-
-    @Column(nullable = false)
+    @NotNull(message = "Semester is required")
+    @Min(value = 1, message = "Semester must be at least 1")
+    @Max(value = 8, message = "Semester cannot be greater than 8")
     private Integer semester;
-
-    private boolean deleted = false;
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getRollNo() {
-        return rollNo;
-    }
-
-    public void setRollNo(Long rollNo) {
-        this.rollNo = rollNo;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -86,16 +54,14 @@ public class Student {
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
-
     public String getCourse() {
         return course;
     }
-
-
 
     public void setCourse(String course) {
         this.course = course;
@@ -107,13 +73,5 @@ public class Student {
 
     public void setSemester(Integer semester) {
         this.semester = semester;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
     }
 }

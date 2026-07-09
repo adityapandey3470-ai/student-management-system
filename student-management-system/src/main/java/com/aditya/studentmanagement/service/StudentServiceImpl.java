@@ -1,7 +1,10 @@
 package com.aditya.studentmanagement.service;
 
+import com.aditya.studentmanagement.dto.StudentRequestDto;
+import com.aditya.studentmanagement.dto.StudentResponseDto;
 import com.aditya.studentmanagement.entity.Student;
 import com.aditya.studentmanagement.exception.StudentNotFoundException;
+import com.aditya.studentmanagement.mapper.StudentMapper;
 import com.aditya.studentmanagement.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,44 +16,61 @@ import java.util.List;
 @Service
 public class StudentServiceImpl implements StudentService {
 
+
+
     private final StudentRepository studentRepository;
+    private final StudentMapper studentMapper;
 
-    public StudentServiceImpl(StudentRepository studentRepository) {
+
+    public StudentServiceImpl(StudentRepository studentRepository, StudentMapper studentMapper) {
         this.studentRepository = studentRepository;
+        this.studentMapper = studentMapper;
+    }
+
+
+    @Override
+    public StudentResponseDto saveStudent(StudentRequestDto studentRequestDto) {
+        Student student = studentMapper.toEntity(studentRequestDto);
+
+        Student lastStudent = studentRepository.findTopByOrderByRollNoDesc();
+        if (lastStudent != null) {
+            student.setRollNo(lastStudent.getRollNo() + 1);
+        } else {
+            student.setRollNo(1001L); // Start from 1001 if no students exist
+        }
+        Student savedStudent = studentRepository.save(student);
+        return studentMapper.toResponseDto(savedStudent);
     }
 
     @Override
-    public Student saveStudent(Student student) {
-        return studentRepository.save(student);
-
+    public List<StudentResponseDto> getAllStudents() {
+        List<Student> students = studentRepository.findByDeletedFalse();
+        return students.stream()
+                .map(studentMapper::toResponseDto)
+                .toList();
     }
 
     @Override
-    public List<Student> getAllStudents() {
-       return studentRepository.findByDeletedFalse();
-
-    }
-
-    @Override
-    public Student getStudentById(Long id) {
+    public StudentResponseDto getStudentById(Long id) {
         Student student = studentRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new StudentNotFoundException("Student not found with id: " + id));
-        return student;
+        return studentMapper.toResponseDto(student);
     }
 
     @Override
-    public Student updateStudent(Long id, Student newStudent) {
+    public StudentResponseDto updateStudent(Long id, StudentRequestDto newStudentRequestDto) {
         Student student = studentRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new StudentNotFoundException("Student not found with id: " + id));
+        Student newStudent = studentMapper.toEntity(newStudentRequestDto);
 
-        student.setRollNo(newStudent.getRollNo());
         student.setFirstName(newStudent.getFirstName());
         student.setLastName(newStudent.getLastName());
         student.setEmail(newStudent.getEmail());
         student.setPhoneNumber(newStudent.getPhoneNumber());
         student.setCourse(newStudent.getCourse());
         student.setSemester(newStudent.getSemester());
-        return studentRepository.save(student);
+        Student updatedStudent = studentRepository.save(student);
+        return studentMapper.toResponseDto(updatedStudent);
     }
 
     @Override
